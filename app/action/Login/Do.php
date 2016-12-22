@@ -112,8 +112,13 @@ class Testapp_Action_LoginDo extends Testapp_ActionClass
      */
     public function perform()
     {
-        die($this->af->get('mailaddress'));
-        //return 'login_do';
+        $um = new Sample_UserManager();
+        $result = $um->auth($this->af->get('mailaddress'), $this->af->get('password'));
+        if (Ethna::isError($result)) {
+            $this->ae->addObject(null, $result);
+            return 'login';
+        }
+        
         return 'index';
     }
 }
