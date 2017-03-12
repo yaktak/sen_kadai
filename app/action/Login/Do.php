@@ -1,9 +1,9 @@
 <?php
-/**
+/*
  *  Login/Do.php
  *
  *  @author     {$author}
- *  @package    Testapp
+ *  @pakage    Testapp
  */
 
 /**
@@ -20,16 +20,16 @@ class Testapp_Form_LoginDo extends Testapp_ActionForm
      *  @var    array   form definition.
      */
     public $form = array(
-      'mailaddress' => [
-        'name'     => 'メールアドレス',
-        'required' => true,
-        'type'     => VAR_TYPE_STRING,
-      ],
-      'password' => [
-        'name'     => 'パスワード',
-        'required' => true,
-        'type'     => VAR_TYPE_STRING,
-      ],
+        'mailaddress' => [
+            'name'     => 'メールアドレス',
+            'required' => true,
+            'type'     => VAR_TYPE_STRING,
+        ],
+        'password' => [
+            'name'     => 'パスワード',
+            'required' => true,
+            'type'     => VAR_TYPE_STRING,
+        ],
 
        /*
         *  TODO: Write form definition which this action uses.
@@ -112,13 +112,30 @@ class Testapp_Action_LoginDo extends Testapp_ActionClass
      */
     public function perform()
     {
-        $um = new Sample_UserManager();
+        $um = new Testapp_UserManager();
+        $mailaddress = $this->af->get('mailaddress');
+        $password    = $this->af->get('password');
+        
+        if ($um.is_registered(mailaddress, password)) {
+            return 'mypage';
+        } else {
+            return 'sign_up';
+        }
+    }
+    
+    /**
+     *  ユーザをデータベースに登録
+     */
+    private function register_user()
+    {
+        $um = new Testapp_UserManager();
+        // 認証が成功ならnull、失敗ならエラーオブジェクト
         $result = $um->auth($this->af->get('mailaddress'), $this->af->get('password'));
-        if (Ethna::isError($result)) {
+        if (Ethna::isError($result)) { // エラーなら
+            // エラーを登録
             $this->ae->addObject(null, $result);
             return 'login';
         }
-        
         return 'index';
     }
 }

@@ -1,25 +1,36 @@
 <?php
 /**
- *  Login.php
+ *  Register/Do.php
  *
  *  @author     {$author}
  *  @package    Testapp
  */
 
 /**
- *  login Form implementation.
+ *  register_do Form implementation.
  *
  *  @author     {$author}
  *  @access     public
  *  @package    Testapp
  */
-class Testapp_Form_Login extends Testapp_ActionForm
+class Testapp_Form_RegisterDo extends Testapp_ActionForm
 {
     /**
      *  @access protected
      *  @var    array   form definition.
      */
     public $form = array(
+        'mailaddress' => [
+            'name'     => 'メールアドレス',
+            'required' => true,
+            'type'     => VAR_TYPE_STRING,
+        ],
+        'password' => [
+            'name'     => 'パスワード',
+            'required' => true,
+            'type'     => VAR_TYPE_STRING,
+        ],
+
        /*
         *  TODO: Write form definition which this action uses.
         *  @see http://ethna.jp/ethna-document-dev_guide-form.html
@@ -63,16 +74,16 @@ class Testapp_Form_Login extends Testapp_ActionForm
 }
 
 /**
- *  login action implementation.
+ *  register_do action implementation.
  *
  *  @author     {$author}
  *  @access     public
  *  @package    Testapp
  */
-class Testapp_Action_Login extends Testapp_ActionClass
+class Testapp_Action_RegisterDo extends Testapp_ActionClass
 {
     /**
-     *  preprocess of login Action.
+     *  preprocess of register_do Action.
      *
      *  @access public
      *  @return string    forward name(null: success.
@@ -80,25 +91,43 @@ class Testapp_Action_Login extends Testapp_ActionClass
      */
     public function prepare()
     {
-        /**
+        // エラーの場合は登録画面へ戻す
         if ($this->af->validate() > 0) {
-            // forward to error view (this is sample)
-            return 'error';
+            return 'register';
         }
-        $sample = $this->af->get('sample');
-        */
+        //$sample = $this->af->get('sample');
+        
         return null;
     }
 
     /**
-     *  login action implementation.
+     *  register_do action implementation.
      *
      *  @access public
      *  @return string  forward name.
      */
     public function perform()
     {
-        # 遷移先
-        return 'login';
+        $um = $this->backend->getManager('user');
+        $mailaddress = $this->af->get('mailaddress');
+        $password_hashed = password_hash($this->af->get('password'), PASSWORD_DEFAULT);
+
+        // DBに登録済み
+        if ($um->is_registered($mailaddress)) {
+            // TODO: 登録済みメッセージ表示
+            return 'login'; // ログイン画面へ
+        }
+
+        // ユーザー登録
+        $r = $um->register_user($mailaddress, $password_hashed);
+
+        // エラー発生時
+        if (!$r) {
+            // TODO: エラーメッセージを表示  
+            return 'register'; // 画面を戻す
+        }
+
+        // マイページへ
+        return 'mypage';
     }
 }

@@ -1,19 +1,19 @@
 <?php
 /**
- *  Login.php
+ *  Mypage.php
  *
  *  @author     {$author}
  *  @package    Testapp
  */
 
 /**
- *  login Form implementation.
+ *  mypage Form implementation.
  *
  *  @author     {$author}
  *  @access     public
  *  @package    Testapp
  */
-class Testapp_Form_Login extends Testapp_ActionForm
+class Testapp_Form_Mypage extends Testapp_ActionForm
 {
     /**
      *  @access protected
@@ -63,16 +63,16 @@ class Testapp_Form_Login extends Testapp_ActionForm
 }
 
 /**
- *  login action implementation.
+ *  mypage action implementation.
  *
  *  @author     {$author}
  *  @access     public
  *  @package    Testapp
  */
-class Testapp_Action_Login extends Testapp_ActionClass
+class Testapp_Action_Mypage extends Testapp_ActionClass
 {
     /**
-     *  preprocess of login Action.
+     *  preprocess of mypage Action.
      *
      *  @access public
      *  @return string    forward name(null: success.
@@ -91,14 +91,13 @@ class Testapp_Action_Login extends Testapp_ActionClass
     }
 
     /**
-     *  login action implementation.
+     *  mypage action implementation.
      *
      *  @access public
      *  @return string  forward name.
      */
     public function perform()
     {
-        # 遷移先
-        return 'login';
+        return 'mypage';
     }
 }

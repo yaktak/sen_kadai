@@ -1,7 +1,7 @@
-<?php /* Smarty version 2.6.30, created on 2017-03-08 00:37:03
-         compiled from login.tpl */ ?>
+<?php /* Smarty version 2.6.30, created on 2017-03-07 19:04:21
+         compiled from register.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'message', 'login.tpl', 14, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('function', 'message', 'register.tpl', 14, false),)), $this); ?>
 <form action="." method="post">
   <?php if (count ( $this->_tpl_vars['errors'] )): ?>
     <ul>
@@ -13,7 +13,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'message', '
     <?php endforeach; endif; unset($_from); ?>
     </ul>
   <?php endif; ?>
-  <h1>Login</h1>
+  <h1>Sign up</h1>
   <table border="0">
     <tr>
       <td>メールアドレス</td>
@@ -29,6 +29,6 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'message', '
     </tr>
   </table>
   <p>
-  <input type="submit" name="action_login_do" value="ログイン">
+  <input type="submit" name="action_register_do" value="Sign up">
   </p>
 </form>

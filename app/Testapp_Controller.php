@@ -20,6 +20,7 @@ require_once 'Testapp_ActionClass.php';
 require_once 'Testapp_ActionForm.php';
 require_once 'Testapp_ViewClass.php';
 require_once 'Testapp_UrlHandler.php';
+require_once 'Testapp_UserManager.php';
 
 /**
  *  Testapp application Controller definition.

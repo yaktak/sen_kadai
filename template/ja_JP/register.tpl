@@ -6,7 +6,7 @@
     {/foreach}
     </ul>
   {/if}
-  <h1>Login</h1>
+  <h1>Sign up</h1>
   <table border="0">
     <tr>
       <td>メールアドレス</td>
@@ -19,6 +19,6 @@
     </tr>
   </table>
   <p>
-  <input type="submit" name="action_login_do" value="ログイン">
+  <input type="submit" name="action_register_do" value="Sign up">
   </p>
 </form>
