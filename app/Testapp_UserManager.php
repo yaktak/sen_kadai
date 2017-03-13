@@ -24,8 +24,8 @@ class Testapp_UserManager extends Ethna_AppManager
     public function is_registered($mailaddress)
     {
         // app_userから引数に該当するレコードを探す
-        $sql = "select mail_address from app_user
-                    where mail_address = '$mailaddress';";
+        $sql = "SELECT mail_address FROM app_user
+                    WHERE mail_address = '$mailaddress';";
         $r = $this->backend->getDB()->getOne($sql);
 
         // レコードがnullならばfalseを返す
@@ -40,8 +40,8 @@ class Testapp_UserManager extends Ethna_AppManager
     public function register_user($mailaddress, $password_hashed)
     {
         // レコードを挿入
-        $sql = "insert into app_user
-                    values('$mailaddress', '$password_hashed');"; 
+        $sql = "INSERT INTO app_user
+                    VALUES('$mailaddress', '$password_hashed');"; 
         $r = $this->backend->getDB()->query($sql);
                 
         if (Ethna::isError($r)) {
