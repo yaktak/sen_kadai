@@ -1,24 +1,20 @@
-<form action="." method="post">
-  {if count($errors)}
-    <ul>
-    {foreach from=$errors item=error}
-      <li>{$error}</li>
-    {/foreach}
-    </ul>
-  {/if}
-  <h1>Sign up</h1>
-  <table border="0">
+<h1>新規登録</h1>
+{* エラーがあれば表示 *}
+{if isset($errors)}
+    <p>{message name="register_error"}</p>
+{/if}
+{form ethna_action="register_do"}
+<table border="0">
     <tr>
-      <td>メールアドレス</td>
-      <!--<td><input type="text" name="mailaddress" value=""></td> -->
-      <td><input type="text" name="mailaddress" value="{$form.mailaddress}">{message name="mailaddress"}</td>
+        <td>Email: </td>
+        <td>{form_input name="email"} {message name="email"}</td>
     </tr>
     <tr>
-      <td>パスワード</td>
-      <td><input type="password" name="password" value="">{message name="password"}</td>
+        <td>パスワード: </td>
+        <td>{form_input name="password"} {message name="password"}</td>
     </tr>
-  </table>
-  <p>
-  <input type="submit" name="action_register_do" value="Sign up">
-  </p>
-</form>
+    <tr>
+        <td>{form_submit value="登録"}</td>
+    </tr>
+</table>
+{/form}

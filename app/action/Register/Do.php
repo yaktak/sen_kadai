@@ -20,17 +20,21 @@ class Testapp_Form_RegisterDo extends Testapp_ActionForm
      *  @var    array   form definition.
      */
     public $form = array(
-        'mailaddress' => [
-            'name'     => 'メールアドレス',
-            'required' => true,
-            'type'     => VAR_TYPE_STRING,
-        ],
-        'password' => [
-            'name'     => 'パスワード',
-            'required' => true,
-            'type'     => VAR_TYPE_STRING,
-        ],
+        'email' => [
+            'type'      => VAR_TYPE_STRING,
+            'form_type' => FORM_TYPE_TEXT,
+            'name'      => 'メールアドレス',
 
+            'required'  => true,
+         ],
+
+        'password' => [
+            'type'      => VAR_TYPE_STRING,
+            'form_type' => FORM_TYPE_PASSWORD,
+            'name'      => 'パスワード',
+            
+            'required'  => true,
+        ],
        /*
         *  TODO: Write form definition which this action uses.
         *  @see http://ethna.jp/ethna-document-dev_guide-form.html
@@ -109,21 +113,23 @@ class Testapp_Action_RegisterDo extends Testapp_ActionClass
     public function perform()
     {
         $um = $this->backend->getManager('user');
-        $mailaddress = $this->af->get('mailaddress');
-        $password_hashed = password_hash($this->af->get('password'), PASSWORD_DEFAULT);
-
+        $email = $this->af->get('email');
+        
         // DBに登録済み
-        if ($um->is_registered($mailaddress)) {
+        if ($um->is_registered($email)) {
             // TODO: 登録済みメッセージ表示
             return 'login'; // ログイン画面へ
         }
+        
+        // パスワードはハッシュして保存
+        $password_hashed = password_hash($this->af->get('password'), PASSWORD_DEFAULT);
 
         // ユーザー登録
-        $r = $um->register_user($mailaddress, $password_hashed);
+        $r = $um->register_user($email, $password_hashed);
 
         // エラー発生時
-        if (!$r) {
-            // TODO: エラーメッセージを表示  
+        if (Ethna::isError($r)) {
+            $this->ae->addObject('register_error', $r);
             return 'register'; // 画面を戻す
         }
 

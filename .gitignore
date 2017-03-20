@@ -1,1 +1,3 @@
 etc/config.php
+www/
+*.vim

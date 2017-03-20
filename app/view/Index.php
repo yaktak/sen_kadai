@@ -7,7 +7,7 @@
  */
 
 /**
- *  Index view implementation.
+ *  index view implementation.
  *
  *  @author     {$author}
  *  @access     public

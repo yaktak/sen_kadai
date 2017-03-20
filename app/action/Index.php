@@ -2,26 +2,48 @@
 /**
  *  Index.php
  *
- *  @author    {$author}
- *  @package   Testapp
+ *  @author     {$author}
+ *  @package    Testapp
  */
 
 /**
- *  Index form implementation
+ *  index Form implementation.
  *
- *  @author    {$author}
- *  @access    public
- *  @package   Testapp
+ *  @author     {$author}
+ *  @access     public
+ *  @package    Testapp
  */
-
 class Testapp_Form_Index extends Testapp_ActionForm
 {
     /**
-     *  @access   protected
-     *
-     *  @var      array   form definition.
+     *  @access protected
+     *  @var    array   form definition.
      */
     public $form = array(
+       /*
+        *  TODO: Write form definition which this action uses.
+        *  @see http://ethna.jp/ethna-document-dev_guide-form.html
+        *
+        *  Example(You can omit all elements except for "type" one) :
+        *
+        *  'sample' => array(
+        *      // Form definition
+        *      'type'        => VAR_TYPE_INT,    // Input type
+        *      'form_type'   => FORM_TYPE_TEXT,  // Form type
+        *      'name'        => 'Sample',        // Display name
+        *
+        *      //  Validator (executes Validator by written order.)
+        *      'required'    => true,            // Required Option(true/false)
+        *      'min'         => null,            // Minimum value
+        *      'max'         => null,            // Maximum value
+        *      'regexp'      => null,            // String by Regexp
+        *
+        *      //  Filter
+        *      'filter'      => 'sample',        // Optional Input filter to convert input
+        *      'custom'      => null,            // Optional method name which
+        *                                        // is defined in this(parent) class.
+        *  ),
+        */
     );
 
     /**
@@ -41,7 +63,7 @@ class Testapp_Form_Index extends Testapp_ActionForm
 }
 
 /**
- *  Index action implementation.
+ *  index action implementation.
  *
  *  @author     {$author}
  *  @access     public
@@ -50,10 +72,11 @@ class Testapp_Form_Index extends Testapp_ActionForm
 class Testapp_Action_Index extends Testapp_ActionClass
 {
     /**
-     *  preprocess Index action.
+     *  preprocess of index Action.
      *
-     *  @access    public
-     *  @return    string  Forward name (null if no errors.)
+     *  @access public
+     *  @return string    forward name(null: success.
+     *                                false: in case you want to exit.)
      */
     public function prepare()
     {
@@ -68,10 +91,10 @@ class Testapp_Action_Index extends Testapp_ActionClass
     }
 
     /**
-     *  Index action implementation.
+     *  index action implementation.
      *
-     *  @access    public
-     *  @return    string  Forward Name.
+     *  @access public
+     *  @return string  forward name.
      */
     public function perform()
     {

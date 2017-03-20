@@ -20,15 +20,19 @@ class Testapp_Form_LoginDo extends Testapp_ActionForm
      *  @var    array   form definition.
      */
     public $form = array(
-        'mailaddress' => [
-            'name'     => 'メールアドレス',
+        'email' => [
+            'name'      => 'メールアドレス',
+            'type'      => VAR_TYPE_STRING,
+            'form_type' => FORM_TYPE_TEXT,
+
             'required' => true,
-            'type'     => VAR_TYPE_STRING,
         ],
         'password' => [
-            'name'     => 'パスワード',
-            'required' => true,
-            'type'     => VAR_TYPE_STRING,
+            'name'      => 'パスワード',
+            'type'      => VAR_TYPE_STRING,
+            'form_type' => FORM_TYPE_PASSWORD,
+
+            'required'  => true,
         ],
 
        /*
@@ -112,30 +116,20 @@ class Testapp_Action_LoginDo extends Testapp_ActionClass
      */
     public function perform()
     {
-        $um = new Testapp_UserManager();
-        $mailaddress = $this->af->get('mailaddress');
-        $password    = $this->af->get('password');
+        // メールアドレスとパスワードを取得
+        $email = $this->af->get('email');
+        $password_raw = $this->af->get('password');
         
-        if ($um.is_registered(mailaddress, password)) {
-            return 'mypage';
-        } else {
-            return 'sign_up';
-        }
-    }
-    
-    /**
-     *  ユーザをデータベースに登録
-     */
-    private function register_user()
-    {
-        $um = new Testapp_UserManager();
-        // 認証が成功ならnull、失敗ならエラーオブジェクト
-        $result = $um->auth($this->af->get('mailaddress'), $this->af->get('password'));
-        if (Ethna::isError($result)) { // エラーなら
-            // エラーを登録
-            $this->ae->addObject(null, $result);
+        // 認証
+        $um = $this->backend->getManager('user');
+        $r = $um->auth($email, $password_raw);
+
+        // 未登録の場合
+        if (Ethna::isError($r)) {
+            $this->ae->addObject("login_error", $r);
             return 'login';
-        }
-        return 'index';
+        }    
+
+        return 'mypage';
     }
 }

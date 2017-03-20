@@ -1,34 +1,29 @@
-<?php /* Smarty version 2.6.30, created on 2017-03-07 19:04:21
+<?php /* Smarty version 2.6.30, created on 2017-03-21 20:03:57
          compiled from register.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'message', 'register.tpl', 14, false),)), $this); ?>
-<form action="." method="post">
-  <?php if (count ( $this->_tpl_vars['errors'] )): ?>
-    <ul>
-    <?php $_from = $this->_tpl_vars['errors']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array'); }if (count($_from)):
-    foreach ($_from as $this->_tpl_vars['error']):
-?>
-      <li><?php echo $this->_tpl_vars['error']; ?>
-</li>
-    <?php endforeach; endif; unset($_from); ?>
-    </ul>
-  <?php endif; ?>
-  <h1>Sign up</h1>
-  <table border="0">
+smarty_core_load_plugins(array('plugins' => array(array('function', 'message', 'register.tpl', 4, false),array('function', 'form_input', 'register.tpl', 10, false),array('function', 'form_submit', 'register.tpl', 17, false),array('block', 'form', 'register.tpl', 6, false),)), $this); ?>
+<h1>新規登録</h1>
+<?php if (isset ( $this->_tpl_vars['errors'] )): ?>
+    <p><?php echo smarty_function_message(array('name' => 'register_error'), $this);?>
+</p>
+<?php endif; ?>
+<?php $this->_tag_stack[] = array('form', array('ethna_action' => 'register_do')); $_block_repeat=true;smarty_block_form($this->_tag_stack[count($this->_tag_stack)-1][1], null, $this, $_block_repeat);while ($_block_repeat) { ob_start(); ?>
+<table border="0">
     <tr>
-      <td>メールアドレス</td>
-      <!--<td><input type="text" name="mailaddress" value=""></td> -->
-      <td><input type="text" name="mailaddress" value="<?php echo $this->_tpl_vars['form']['mailaddress']; ?>
-"><?php echo smarty_function_message(array('name' => 'mailaddress'), $this);?>
+        <td>Email: </td>
+        <td><?php echo smarty_function_form_input(array('name' => 'email'), $this);?>
+ <?php echo smarty_function_message(array('name' => 'email'), $this);?>
 </td>
     </tr>
     <tr>
-      <td>パスワード</td>
-      <td><input type="password" name="password" value=""><?php echo smarty_function_message(array('name' => 'password'), $this);?>
+        <td>パスワード: </td>
+        <td><?php echo smarty_function_form_input(array('name' => 'password'), $this);?>
+ <?php echo smarty_function_message(array('name' => 'password'), $this);?>
 </td>
     </tr>
-  </table>
-  <p>
-  <input type="submit" name="action_register_do" value="Sign up">
-  </p>
-</form>
+    <tr>
+        <td><?php echo smarty_function_form_submit(array('value' => "登録"), $this);?>
+</td>
+    </tr>
+</table>
+<?php $_block_content = ob_get_contents(); ob_end_clean(); $_block_repeat=false;echo smarty_block_form($this->_tag_stack[count($this->_tag_stack)-1][1], $_block_content, $this, $_block_repeat); }  array_pop($this->_tag_stack); ?>

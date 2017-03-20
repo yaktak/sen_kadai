@@ -3,30 +3,42 @@ require_once('adodb5/adodb.inc.php');
 
 class Testapp_UserManager extends Ethna_AppManager
 {
-    // 認証処理、登録するときに使用する
-    public function auth($mailaddress, $password)
+    /**
+     * 認証処理を行う
+     * 
+     * @return null | Ethna_Error    認証成功ならばnull
+     */
+    public function auth($email, $password_raw)
     {
-        // TODO: 実際にはまとも認証処理を行う
-        if ($mailaddress != $password) { // メールアドレスとパスワードが違う場合
-            return Ethna::raiseNotice('メールアドレスまたはパスワードが正しくありません',
-            E_SAMPLE_AUTH);
-        }
+        $err = function() {
+            return Ethna::raiseError("メールアドレスまたはパスワードが間違っています");
+        };
 
-        // 成功時にはnullを返す
+        // メールアドレスに紐付けられたパスワードハッシュを探す
+        $q = "SELECT password FROM app_user WHERE email='$email'"; 
+        $password_hash = $this->backend->getDB()->getOne($q);
+
+        // メールアドレスが存在しない場合
+        if (!$password_hash) return $err();
+        
+        // パスワードが間違っている場合 
+        if (!password_verify($password_raw, $password_hash)) return $err(); 
+
         return null;
     }
 
     /**
-     * DBに登録されているか確認
+     * メールアドレスがDBに登録されているか確認
      *  
-     * @return bool    true: registered, false: not registered
+     * @return bool | Ethna_Error    true: registered, false: not registered, error: Ethna_Error
      */
-    public function is_registered($mailaddress)
+    public function is_registered($email)
     {
         // app_userから引数に該当するレコードを探す
-        $sql = "SELECT mail_address FROM app_user
-                    WHERE mail_address = '$mailaddress';";
-        $r = $this->backend->getDB()->getOne($sql);
+        $q = "SELECT * FROM app_user WHERE email='$email';";
+        $r = $this->backend->getDB()->getOne($q);
+
+        if (Ethna::isError($r)) return Ethna::raiseError("エラーが発生しました");
 
         // レコードがnullならばfalseを返す
         return empty($r) ? false : true;
@@ -35,26 +47,23 @@ class Testapp_UserManager extends Ethna_AppManager
     /**
      * DBに登録
      *
-     * @return bool    true: success, false: failed
+     * @return null | Ethna_Error    成功したらnull
      */
-    public function register_user($mailaddress, $password_hashed)
+    public function register_user($email, $password_hashed)
     {
         // レコードを挿入
-        $sql = "INSERT INTO app_user
-                    VALUES('$mailaddress', '$password_hashed');"; 
-        $r = $this->backend->getDB()->query($sql);
+        $q = "INSERT INTO app_user VALUES('$email', '$password_hashed');"; 
+        $r = $this->backend->getDB()->query($q);
                 
-        if (Ethna::isError($r)) {
-            $this->ae->add($r); // エラーを登録
-            return false;
-        }
-
-        return true;
+        if (Ethna::isError($r))
+            return Ethna::raiseError("エラーが発生しました。もう一度お試しください。");
+        
+        return null;
     }
 
     // DBから登録を解除
-    public function unregister_user($mailaddress, $password_hashed)
+    public function unregister_user($email, $password_hashed)
     {
-        
+        // TODO: 登録解除処理を実装    
     }
 }

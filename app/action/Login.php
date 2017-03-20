@@ -98,7 +98,6 @@ class Testapp_Action_Login extends Testapp_ActionClass
      */
     public function perform()
     {
-        # 遷移先
         return 'login';
     }
 }

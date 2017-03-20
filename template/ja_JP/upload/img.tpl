@@ -1,4 +1,4 @@
-<h2>Upload form</h2>
+<h2>Upload</h2>
 {if count($errors)} {* エラーメッセージ *}
     <ul>
     {foreach from=$errors item=error}

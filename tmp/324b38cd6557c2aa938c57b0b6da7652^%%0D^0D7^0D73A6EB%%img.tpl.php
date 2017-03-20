@@ -1,8 +1,8 @@
-<?php /* Smarty version 2.6.30, created on 2017-03-13 22:06:01
+<?php /* Smarty version 2.6.30, created on 2017-03-19 23:53:54
          compiled from upload/img.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('block', 'form', 'upload/img.tpl', 10, false),array('function', 'form_input', 'upload/img.tpl', 11, false),array('function', 'form_submit', 'upload/img.tpl', 12, false),)), $this); ?>
-<h2>Upload form</h2>
+<h2>Upload</h2>
 <?php if (count ( $this->_tpl_vars['errors'] )): ?>     <ul>
     <?php $_from = $this->_tpl_vars['errors']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array'); }if (count($_from)):
     foreach ($_from as $this->_tpl_vars['error']):

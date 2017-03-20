@@ -22,13 +22,13 @@ class Testapp_Form_UploadImg extends Testapp_ActionForm
     public $form = array(
         'img_upload' => [
             // アップロードフォームの定義
-           'type'       => [VAR_TYPE_FILE], // 入力はファイルの配列
+           'type'       => VAR_TYPE_FILE,
            'form_type'  => FORM_TYPE_FILE,
            'name'       => 'アップロードする画像ファイル',
 
            // バリデーション
            'required'   => true, // 指定なしだとエラー
-           'max'        => 2000, // 画像の最大KB
+           'max'        => 5000, // 画像の最大KB
         ],
        /*
         *  TODO: Write form definition which this action uses.
@@ -79,7 +79,6 @@ class Testapp_Form_UploadImg extends Testapp_ActionForm
  *  @access     public
  *  @package    Testapp
  */
-require_once('adodb5/adodb.inc.php');
 class Testapp_Action_UploadImg extends Testapp_ActionClass
 {
     /**
@@ -106,38 +105,18 @@ class Testapp_Action_UploadImg extends Testapp_ActionClass
      */
     public function perform()
     {
-        // アップロードされた画像
-        $f_info = $this->af->get('img_upload');
+        // アップロードされた画像を取得
+        $img_info = $this->af->get('img_upload');
 
-        // バイト配列(String)の取り出し
-        $img_str = file_get_contents($f_info['tmp_name']);
-        
-        // 取り出しに失敗した場合
-        if ($img_str === false) {
-            // TODO: Handle the error    
-        }
+        // サーバに画像を保存
+        $ism = $this->backend->getManager('img_storing');
+        $r  = $ism->store_img($img_info, /* store_dir= */ './uploads');
 
-        // IDのためのハッシュ
-        $id = hash('md5', $img_str);
-
-        // bytea型のためにエスケープ
-        $img_str_escaped = pg_escape_bytea($img_str);
-
-        // アップロードされたファイルの名前
-        $name = $f_info['name'];
-        
-        // DBに保存
-        $sql = "INSERT INTO uploaded_img
-                    VALUES('$id', '$img_str_escaped');
-                INSERT INTO img_info
-                    VALUES('$id', '$name');";
-        $r = $this->backend->getDB()->query($sql);
-
-        // DB問い合わせに失敗した場合
         if (Ethna::isError($r)) {
-            // TODO: Handle the error
+            $this->ae->addObject(null, $r);
+            return 'upload_img'; 
         }
-        
-        return 'show_img';
+
+        return 'upload_img';
     }
 }
