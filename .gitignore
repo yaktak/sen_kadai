@@ -1,3 +1,4 @@
 etc/config.php
 www/
 *.vim
+www/ethnam.log
