@@ -72,6 +72,18 @@ class Testapp_Form_Login extends Testapp_ActionForm
 class Testapp_Action_Login extends Testapp_ActionClass
 {
     /**
+     * 認証処理を外すため
+     * authenticate()をオーバーライド
+     */
+    public function authenticate()
+    {
+        // 認証済みならばマイページへ飛ばす
+        if (!empty($this->session->get('user'))) return 'mypage';
+
+        return null; 
+    }
+
+    /**
      *  preprocess of login Action.
      *
      *  @access public
