@@ -18,10 +18,11 @@ class Testapp_UserManager extends Ethna_AppManager
         $q = "SELECT password FROM app_user WHERE email='$email'"; 
         $password_hash = $this->backend->getDB()->getOne($q);
 
-        // メールアドレスが存在しない場合
+        // メールアドレスが存在しない場合はエラー
         if (!$password_hash) return $err();
         
-        // パスワードが間違っている場合 
+        // パスワードハッシュを比較
+        // 異なる場合はエラー 
         if (!password_verify($password_raw, $password_hash)) return $err(); 
 
         return null;

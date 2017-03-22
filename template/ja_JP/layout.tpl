@@ -7,7 +7,9 @@
 </head>
 <body>
 <div id="header">
-    <h1>Testapp</h1>
+    <h1>
+        Testapp{if isset($session.user)} - Hello! {$session.user}{/if}
+    </h1>
 </div>
 
 <div id="main">

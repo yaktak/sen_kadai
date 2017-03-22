@@ -26,6 +26,15 @@ class Testapp_ActionClass extends Ethna_ActionClass
      */
     public function authenticate()
     {
+        // このメソッドはprepare()よりも前に実行される
+        // セッションが開始されていない場合は開始
+        if (!$this->session->isStart()) $this->session->start(); 
+
+        // ログイン状態を確認し、未認証の場合はログイン画面へ遷移
+        // セッション値に'user'が登録されていなければ未認証と見なす
+        $user = $this->session->get('user');
+        if (empty($user)) return 'login'; 
+
         return parent::authenticate();
     }
 

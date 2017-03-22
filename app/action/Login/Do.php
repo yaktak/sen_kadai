@@ -87,6 +87,15 @@ class Testapp_Form_LoginDo extends Testapp_ActionForm
 class Testapp_Action_LoginDo extends Testapp_ActionClass
 {
     /**
+     * 認証処理を行う前にログイン画面に飛んでしまうので
+     * それを防ぐためにauthenticate()をオーバーライド
+     */
+    public function authenticate()
+    {
+        return null; 
+    }
+
+    /**
      *  preprocess of login_do Action.
      *
      *  @access public
@@ -124,11 +133,15 @@ class Testapp_Action_LoginDo extends Testapp_ActionClass
         $um = $this->backend->getManager('user');
         $r = $um->auth($email, $password_raw);
 
-        // 未登録の場合
+        // 未登録の場合はログイン画面に戻しエラーメッセージを表示
         if (Ethna::isError($r)) {
-            $this->ae->addObject("login_error", $r);
+            $this->ae->addObject('login_error', $r);
             return 'login';
         }    
+            
+        // セッション値をセット
+        // 次のアクションからTestapp_ActionClassの認証を通過させる 
+        $this->session->set('user', $email);
 
         return 'mypage';
     }
