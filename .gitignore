@@ -1,5 +1,6 @@
 etc/config.php
 *.vim
+ethnam.log
 www/ethnam.log
 www/uploads
 tmp
