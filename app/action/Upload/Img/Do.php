@@ -1,25 +1,35 @@
 <?php
 /**
- *  Upload/Img.php
+ *  Upload/Img/Do.php
  *
  *  @author     {$author}
  *  @package    Testapp
  */
 
 /**
- *  upload_img Form implementation.
+ *  upload_do Form implementation.
  *
  *  @author     {$author}
  *  @access     public
  *  @package    Testapp
  */
-class Testapp_Form_UploadImg extends Testapp_ActionForm
+class Testapp_Form_UploadImgDo extends Testapp_ActionForm
 {
     /**
      *  @access protected
      *  @var    array   form definition.
      */
     public $form = array(
+        'img_upload' => [
+            // アップロードフォームの定義
+           'type'       => VAR_TYPE_FILE,
+           'form_type'  => FORM_TYPE_FILE,
+           'name'       => 'アップロードする画像ファイル',
+
+           // バリデーション
+           'required'   => true, // 指定なしだとエラー
+           'max'        => 5000, // 画像の最大KB
+        ],
        /*
         *  TODO: Write form definition which this action uses.
         *  @see http://ethna.jp/ethna-document-dev_guide-form.html
@@ -69,7 +79,7 @@ class Testapp_Form_UploadImg extends Testapp_ActionForm
  *  @access     public
  *  @package    Testapp
  */
-class Testapp_Action_UploadImg extends Testapp_ActionClass
+class Testapp_Action_UploadImgDo extends Testapp_ActionClass
 {
     /**
      *  preprocess of upload_img Action.
@@ -80,11 +90,9 @@ class Testapp_Action_UploadImg extends Testapp_ActionClass
      */
     public function prepare()
     {
-        /**
         if ($this->af->validate() > 0) {
             return 'upload_img';
         }
-         */
 
         return null;
     }
@@ -97,6 +105,17 @@ class Testapp_Action_UploadImg extends Testapp_ActionClass
      */
     public function perform()
     {
+        // アップロードされた画像を取得
+        $img_info = $this->af->get('img_upload');
+
+        // サーバに画像を保存
+        $ism = $this->backend->getManager('img_storing');
+        $result = $ism->store_img($img_info, /* store_dir= */ './uploads');
+
+        if (Ethna::isError($result)) {
+            $this->ae->addObject(null, $result);
+        }
+
         return 'upload_img';
     }
 }
