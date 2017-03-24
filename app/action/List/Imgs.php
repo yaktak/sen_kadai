@@ -100,16 +100,16 @@ class Testapp_Action_ListImgs extends Testapp_ActionClass
     {
         // 画像のパス、元の名前を取得するクエリ
         $q = "SELECT path, original_name
-              FROM image;";
+              FROM image WHERE owner=?;";
 
-        // 行(連想配列)のリストを取得
-        $r = $this->backend->getDB()->getAll($q);
-        if (Ethna::isError($r)) {
-            $this->ae->addObject(null, $r);
+        // ユーザーに関連するレコード(連想配列)のリストを取得
+        $records = $this->backend->getDB()->getAll($q, $this->session->get('user'));
+        if (Ethna::isError($records)) {
+            $this->ae->addObject(null, $records);
         }
 
         // AFにセット
-        $this->af->set('img_info_list', $r);
+        $this->af->set('img_info_list', $records);
 
         return 'list_imgs';
     }
