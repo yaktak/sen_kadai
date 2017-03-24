@@ -72,6 +72,14 @@ class Testapp_Form_Register extends Testapp_ActionForm
 class Testapp_Action_Register extends Testapp_ActionClass
 {
     /**
+     * オーバーライド
+     */
+    public function authenticate()
+    {
+        return null;
+    }
+
+    /**
      *  preprocess of register Action.
      *
      *  @access public
