@@ -51,7 +51,6 @@ class Testapp_ImgStoringManager extends Ethna_AppManager
         $result = $this->_store_in_db($store_data);
         if (Ethna::isError($result)) {
             unlink($store_path); // エラーなら画像を削除
-            trigger_error("Error occurred while storing data in DB");
             return $result;
         }
         
@@ -71,14 +70,19 @@ class Testapp_ImgStoringManager extends Ethna_AppManager
     private function _store_in_db($img_info) 
     {
         // 画像の詳細をimageテーブルに保存するクエリ
-        $q = "INSERT INTO image(path, owner, md5_hash, original_name,
-                                 extension, tags, note)
-               VALUES('$img_info[path]',          '$img_info[owner]', '$img_info[md5_hash]',
-                      '$img_info[original_name]', '$img_info[ext]',   '$img_info[tags]',  
-                      '$img_info[note]');";
+        $q = "INSERT INTO image(path, owner, md5_hash, original_name, extension, tags, note)
+              VALUES(?, ?, ?, ?, ?, ?, ?);";
         
-        $result = $this->backend->getDB()->query($q);
-        if (Ethna::isError($result)) return Ethna::raiseError("エラーが発生しました"); 
+        // プレースホルダの値
+        $val = [$img_info['path'],          $img_info['owner'], $img_info['md5_hash'],
+                $img_info['original_name'], $img_info['ext'],   $img_info['tags'],  
+                $img_info['note']];
+
+        $result = $this->backend->getDB()->query($q, $val);
+        if (Ethna::isError($result)) {
+            trigger_error("Error occurred while storing data in DB");
+            return Ethna::raiseError("エラーが発生しました"); 
+        }
 
         return null;
     }

@@ -108,10 +108,10 @@ class Testapp_Action_ViewImg extends Testapp_ActionClass
         // 画像の情報を取得するクエリ
         $sql = "SELECT path, md5_hash, owner, tags, note, original_name, extension
                 FROM image 
-                WHERE path = '$img_path';";
+                WHERE path = ?;";
         
         // 連想配列(行)のリストを取得
-        $r = $this->backend->getDB()->getRow($sql);
+        $r = $this->backend->getDB()->getRow($sql, $img_path);
 
         if (Ethna::isError($r)) {
             $this->ae->addObject(null, $r);

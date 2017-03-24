@@ -12,16 +12,14 @@ class Testapp_UserManager extends Ethna_AppManager
      */
     public function auth($email, $password_raw)
     {
-
         // メールアドレスに紐付けられたパスワードハッシュを探す
-        $q = "SELECT password FROM app_user WHERE email='$email'"; 
-        $password_hash = $this->backend->getDB()->getOne($q);
+        $q = "SELECT password FROM app_user WHERE email=?"; 
+        $password_hash = $this->backend->getDB()->getOne($q, $email);
 
         // メールアドレスが存在しない場合はエラー
         if (!$password_hash) 
             Ethna::raiseError("メールアドレスまたはパスワードが間違っています");
 
-        
         // パスワードハッシュを比較
         // 異なる場合はエラー 
         if (!password_verify($password_raw, $password_hash))
@@ -39,8 +37,8 @@ class Testapp_UserManager extends Ethna_AppManager
     public function is_registered($email)
     {
         // app_userから引数に該当するレコードを探す
-        $q = "SELECT * FROM app_user WHERE email='$email';";
-        $record = $this->backend->getDB()->getRow($q);
+        $q = "SELECT * FROM app_user WHERE email=?;";
+        $record = $this->backend->getDB()->getRow($q, $email);
 
         if (Ethna::isError($record)) return Ethna::raiseError("エラーが発生しました");
 
@@ -58,8 +56,8 @@ class Testapp_UserManager extends Ethna_AppManager
     public function register_user($email, $password_hashed)
     {
         // app_userテーブルにレコードを挿入
-        $q = "INSERT INTO app_user VALUES('$email', '$password_hashed');"; 
-        $result = $this->backend->getDB()->query($q);
+        $q = "INSERT INTO app_user VALUES(?, ?);"; 
+        $result = $this->backend->getDB()->query($q, [$email, $password_hashed]);
                 
         if (Ethna::isError($result))
             return Ethna::raiseError("エラーが発生しました。もう一度お試しください。");
