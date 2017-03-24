@@ -125,17 +125,17 @@ class Testapp_Action_LoginDo extends Testapp_ActionClass
      */
     public function perform()
     {
-        // メールアドレスとパスワードを取得
+        // 入力されたメールアドレスとパスワードを取得
         $email = $this->af->get('email');
         $password_raw = $this->af->get('password');
         
         // 認証
         $um = $this->backend->getManager('user');
-        $r = $um->auth($email, $password_raw);
+        $result = $um->auth($email, $password_raw);
 
         // 未登録の場合はログイン画面に戻しエラーメッセージを表示
-        if (Ethna::isError($r)) {
-            $this->ae->addObject('login_error', $r);
+        if (Ethna::isError($result)) {
+            $this->ae->addObject('login_error', $result);
             return 'login';
         }    
             
