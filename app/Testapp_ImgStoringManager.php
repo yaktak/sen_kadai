@@ -35,12 +35,12 @@ class Testapp_ImgStoringManager extends Ethna_AppManager
             return $md5_hash;
         }
 
-        // TODO: owner, tags, noteはモック
+        // TODO: tags, noteはモック
         // DBに保存する情報
         $store_data = [
-            'path'          => $store_path, // 保管パス
+            'path'          => $store_path,  // 保管パス
             'md5_hash'      => $md5_hash,    // MD5ハッシュ
-            'owner'         => 'a@email.com',
+            'owner'         => $this->session->get('user'), // アップロードしたユーザー名
             'tags'          => 'tag1, tag2, tag3',
             'note'          => 'write something here',
             'original_name' => $upped_img_info['name'], // 元のファイル名
