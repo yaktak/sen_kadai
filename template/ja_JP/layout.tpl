@@ -7,9 +7,7 @@
 </head>
 <body>
 <div id="header">
-    <h1>
-        Testapp{if isset($session.user)} - Hello! {$session.user}{/if}
-    </h1>
+    <h1>Testapp</h1>
 </div>
 
 <div id="main">
@@ -17,6 +15,11 @@
 </div>
 
 <div id="footer">
+    <a href="./?action_register=true">新規登録</a>
+    {if isset($session.user)}
+        <a href="./?action_mypage=true">マイページ</a>
+        <a href="./?action_logout=true">ログアウト</a>
+    {/if}
     Powered By Ethnam - {$smarty.const.ETHNA_VERSION}.
 </div>
 </body>
