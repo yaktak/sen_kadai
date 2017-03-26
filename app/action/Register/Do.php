@@ -87,6 +87,14 @@ class Testapp_Form_RegisterDo extends Testapp_ActionForm
 class Testapp_Action_RegisterDo extends Testapp_ActionClass
 {
     /**
+     * オーバーライド
+     */
+     public function authenticate()
+     {
+        return null;
+     }
+
+    /**
      *  preprocess of register_do Action.
      *
      *  @access public
@@ -117,8 +125,9 @@ class Testapp_Action_RegisterDo extends Testapp_ActionClass
         
         // DBに登録済み
         if ($um->is_registered($email)) {
-            // TODO: 登録済みメッセージ表示
-            return 'login'; // ログイン画面へ
+            $err = Ethna::raiseError("すでに登録されています。ログインしてください。");
+            $this->ae->addObject('register_error', $err);            
+            return 'register';
         }
         
         // パスワードはハッシュして保存
@@ -132,6 +141,8 @@ class Testapp_Action_RegisterDo extends Testapp_ActionClass
             $this->ae->addObject('register_error', $r);
             return 'register'; // 画面を戻す
         }
+
+        $this->session->set('user', $email);
 
         // マイページへ
         return 'mypage';

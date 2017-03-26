@@ -32,7 +32,7 @@ class Testapp_Form_UploadImgDo extends Testapp_ActionForm
         ],
         // メモ 
         'note' => [
-            'type'      => VAR_TYPE_STING,
+            'type'      => VAR_TYPE_STRING,
             'form_type' => FORM_TYPE_TEXT,
             'name'      => "メモ",
         ],

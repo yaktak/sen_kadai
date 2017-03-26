@@ -18,12 +18,12 @@ class Testapp_UserManager extends Ethna_AppManager
 
         // メールアドレスが存在しない場合はエラー
         if (!$password_hash) 
-            Ethna::raiseError("メールアドレスまたはパスワードが間違っています");
+            return Ethna::raiseError("メールアドレスまたはパスワードが間違っています");
 
         // パスワードハッシュを比較
         // 異なる場合はエラー 
         if (!password_verify($password_raw, $password_hash))
-            Ethna::raiseError("メールアドレスまたはパスワードが間違っています");
+            return Ethna::raiseError("メールアドレスまたはパスワードが間違っています");
 
         return null;
     }

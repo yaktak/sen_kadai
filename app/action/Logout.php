@@ -98,7 +98,9 @@ class Testapp_Action_Logout extends Testapp_ActionClass
      */
     public function perform()
     {
+        $this->session->remove('user');
         $this->session->destroy();
+        
         return 'index';
     }
 }
