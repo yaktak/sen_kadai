@@ -3,7 +3,7 @@
 {if isset($errors)}
     <p>{message name="login_error"}</p>
 {/if}
-{form ethna_action="login_do"}
+{form ethna_action="login_do" name="login"}
 <table border="0">
     <tr>
         <td>Email: </td>
@@ -17,4 +17,7 @@
         <td>{form_submit value="ログイン"}</td>
     </tr>
 </table>
+{/form}
+{form ethna_action="register" name="to_register"}
+<p>登録していない？ {form_submit value="新規登録"}</p>
 {/form}
