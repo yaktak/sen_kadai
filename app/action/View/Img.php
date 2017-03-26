@@ -111,13 +111,13 @@ class Testapp_Action_ViewImg extends Testapp_ActionClass
                 WHERE path = ?;";
         
         // 連想配列(行)のリストを取得
-        $r = $this->backend->getDB()->getRow($sql, $img_path);
+        $records = $this->backend->getDB()->getRow($sql, $img_path);
 
-        if (Ethna::isError($r)) {
-            $this->ae->addObject(null, $r);
+        if (Ethna::isError($records)) {
+            $this->ae->addObject(null, $records);
         }
 
-        $this->af->set('view_img_info', $r);
+        $this->af->set('view_img_info', $records);
 
         return 'view_img';
     }

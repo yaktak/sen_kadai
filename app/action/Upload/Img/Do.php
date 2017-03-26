@@ -20,8 +20,8 @@ class Testapp_Form_UploadImgDo extends Testapp_ActionForm
      *  @var    array   form definition.
      */
     public $form = array(
+        // アップロードフォームの定義
         'img_upload' => [
-            // アップロードフォームの定義
            'type'       => VAR_TYPE_FILE,
            'form_type'  => FORM_TYPE_FILE,
            'name'       => 'アップロードする画像ファイル',
@@ -29,6 +29,12 @@ class Testapp_Form_UploadImgDo extends Testapp_ActionForm
            // バリデーション
            'required'   => true, // 指定なしだとエラー
            'max'        => 5000, // 画像の最大KB
+        ],
+        // メモ 
+        'note' => [
+            'type'      => VAR_TYPE_STING,
+            'form_type' => FORM_TYPE_TEXT,
+            'name'      => "メモ",
         ],
        /*
         *  TODO: Write form definition which this action uses.
@@ -105,12 +111,14 @@ class Testapp_Action_UploadImgDo extends Testapp_ActionClass
      */
     public function perform()
     {
-        // アップロードされた画像を取得
+        // アップロードされた情報を取得
         $img_info = $this->af->get('img_upload');
+        $ex_info['tags'] = 'example_tag, tag2';
+        $ex_info['note'] = $this->af->get('note');
 
-        // サーバに画像を保存
+        // サーバに保存
         $ism = $this->backend->getManager('img_storing');
-        $result = $ism->store_img($img_info, /* store_dir= */ './uploads');
+        $result = $ism->store_img($img_info, $ex_info, /* store_dir= */ './uploads');
 
         if (Ethna::isError($result)) {
             $this->ae->addObject(null, $result);

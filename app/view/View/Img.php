@@ -27,6 +27,7 @@ class Testapp_View_ViewImg extends Testapp_ViewClass
 
         // Smarty変数をセット
         $this->af->setApp('img_path', $img_info['path']); 
+        $this->af->setApp('note', $img_info['note']);
     }
 }
 
