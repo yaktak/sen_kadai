@@ -106,18 +106,25 @@ class Testapp_Action_ViewImg extends Testapp_ActionClass
         $img_path = $this->af->get('img_path');
 
         // 画像の情報を取得するクエリ
-        $sql = "SELECT path, md5_hash, owner, tags, note, original_name, extension
-                FROM image 
-                WHERE path = ?;";
+        $q = "SELECT path, md5_hash, note, original_name, extension
+              FROM image 
+              WHERE path = ?;";
+        $img_info = $this->backend->getDB()->getRow($q, $img_path);
+        if (Ethna::isError($img_info)) $this->ae->addObject(null, $img_info);
+
+        // タグの情報を取得
+        $q = "SELECT tag FROM attached_tag WHERE path = ?;";
+        // 最低1個の要素を持つ配列が返る
+        $tags = $this->backend->getDB()->getCol($q, $img_path);
+        if (Ethna::isError($tags)) $this->ae->addObject(null, $tags);
+
+        // データがない場合は空文字が登録されているので、代わりにnullをセット
+        $img_info = empty($img_info) ? null : $img_info;
+        $tags     = empty($tags[0])  ? null : $tags;
         
-        // 連想配列(行)のリストを取得
-        $records = $this->backend->getDB()->getRow($sql, $img_path);
-
-        if (Ethna::isError($records)) {
-            $this->ae->addObject(null, $records);
-        }
-
-        $this->af->set('view_img_info', $records);
+        // 値をセット
+        $this->af->set('view_img_info', $img_info);
+        $this->af->set('tags', $tags);
 
         return 'view_img';
     }

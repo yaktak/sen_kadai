@@ -8,16 +8,18 @@ class Testapp_ImgStoringManager extends Ethna_AppManager
      * 画像を移動して詳細をDBに保存
      *
      * @param  assoc_array            ActionFormから渡される連想配列
-     * @param  assoc_array            追加情報(メモ、タグ)
+     * @param  assoc_array            追加情報 ['note'=>string メモ、'tags'=>array タグ]
      * @param  string                 移動先ディレクトリ
      * @return null | Ethna_Error     成功したらnull
      */
+     // TODO: 引数を簡略化
     public function store_img($upped_img_info, $ex_info, $move_dir){
 
         // 画像かどうかチェック
         $ext = self::_check_imagetype($upped_img_info['tmp_name']);
         if ($ext === false) return Ethna::raiseError("対応していないファイル形式です");
         
+        // TODO: 拡張子を追加
         // Unix時間+ランダムな8桁の文字列
         // これをファイル名として画像を保存する
         $store_path = $move_dir . '/' . self::_rand_str(8). '_' . microtime(true);
@@ -63,26 +65,38 @@ class Testapp_ImgStoringManager extends Ethna_AppManager
      * @param  assoc_array
      *     ['path'     => 保管されたパス,   'owner'         => 所有ユーザー,
      *      'md5_hash' => 画像のMD5ハッシュ,'original_name' => 元のファイル名,
-     *      'ext'      => 拡張子,           'tags'          => カンマ区切りのタグ,
+     *      'ext'      => 拡張子,           'tags'          => タグの配列,
      *      'note'     => メモ]
      * @return null | Ethna_Error    成功ならnull
      */
-    private function _store_in_db($img_info) 
+    private function _store_in_db($data) 
     {
         // 画像の詳細をimageテーブルに保存するクエリ
-        $q = "INSERT INTO image(path, owner, md5_hash, original_name, extension, tags, note)
-              VALUES(?, ?, ?, ?, ?, ?, ?);";
-        
-        // プレースホルダの値
-        $val = [$img_info['path'],          $img_info['owner'], $img_info['md5_hash'],
-                $img_info['original_name'], $img_info['ext'],   $img_info['tags'],  
-                $img_info['note']];
+        $q[] = "INSERT INTO image(path, owner, md5_hash, original_name, extension, note)
+                VALUES(?, ?, ?, ?, ?, ?);";
 
-        $result = $this->backend->getDB()->query($q, $val);
-        if (Ethna::isError($result)) {
-            trigger_error("Error occurred while storing data in DB");
-            return Ethna::raiseError("エラーが発生しました"); 
+        // プレースホルダの値
+        $v[] = [$data['path'],          $data['owner'], $data['md5_hash'],
+                $data['original_name'], $data['ext'],   $data['note']];
+
+        // タグをattached_tagテーブルに保存するクエリを追加
+        foreach ($data['tags'] as $t) {
+            $q[] = "INSERT INTO attached_tag(path, tag) VALUES(?, ?);";
+            $v[] = [$data['path'], $t]; // プレースホルダの値も追加
         }
+
+        // クエリを順に実行
+        $db = $this->backend->getDB();
+        $db->begin(); // トランザクション開始
+        for ($i = 0; $i < count($q); ++$i) {
+            $result = $db->query($q[$i], $v[$i]);
+            if (Ethna::isError($result)) {
+                $db->rollback(); // エラーが起きたらロールバック
+                trigger_error($result->getMessage());
+                return Ethna::raiseError("エラーが発生しました"); 
+            }
+        }
+        $db->commit(); // トランザクション終了
 
         return null;
     }

@@ -23,10 +23,10 @@ class Testapp_View_ListImgs extends Testapp_ViewClass
     public function preforward()
     {
         // 画像の配列を取得 
-        $img_list = $this->af->get('img_info_list');
+        $img_list = $this->af->get('img_list');
         
         // Smary変数にセット
-        $this->af->setApp('img_info_list', $img_list);
+        $this->af->setApp('img_list', $img_list);
     }
 }
 

@@ -20,6 +20,12 @@ class Testapp_Form_ListImgs extends Testapp_ActionForm
      *  @var    array   form definition.
      */
     public $form = array(
+
+        // 選択されたOptionタグのvalue値(配列の添字)が返る
+        'tag'      => [
+            'form_type'     => FORM_TYPE_SELECT,
+            'name'          => 'tag',
+        ],
        /*
         *  TODO: Write form definition which this action uses.
         *  @see http://ethna.jp/ethna-document-dev_guide-form.html
@@ -71,6 +77,8 @@ class Testapp_Form_ListImgs extends Testapp_ActionForm
  */
 class Testapp_Action_ListImgs extends Testapp_ActionClass
 {
+    private $user_tags; // ユーザが登録したすべてのタグの配列
+
     /**
      *  preprocess of list_imgs Action.
      *
@@ -80,14 +88,29 @@ class Testapp_Action_ListImgs extends Testapp_ActionClass
      */
     public function prepare()
     {
-        /**
-        if ($this->af->validate() > 0) {
-            // forward to error view (this is sample)
-            return 'error';
-        }
-        $sample = $this->af->get('sample');
-        */
+        // タグの配列を取得
+        $this->user_tags = $this->_fetch_tags();
+
+        // 先頭にデフォルトのタグを追加
+        array_unshift($this->user_tags, "すべて表示");
+
+        // セレクトボックスの選択肢を初期化
+        $this->af->form['tag']['option'] = $this->user_tags;
+       
         return null;
+    }
+
+    /**
+     * ユーザが登録した全てのタグを取得
+     *
+     * @return array    タグの配列
+     */
+    private function _fetch_tags()
+    {
+        $q = "SELECT DISTINCT t.tag
+              FROM image AS i, attached_tag AS t
+              WHERE i.path=t.path AND i.owner=?;"; 
+        return $this->backend->getDB()->getCol($q, $this->session->get('user'));  
     }
 
     /**
@@ -98,18 +121,33 @@ class Testapp_Action_ListImgs extends Testapp_ActionClass
      */
     public function perform()
     {
-        // 画像のパス、元の名前を取得するクエリ
-        $q = "SELECT path, original_name
-              FROM image WHERE owner=?;";
+        if (empty($this->af->get('tag'))) { 
+            // タグが指定されなければ
+            // ユーザに関連する画像
+            $q = "SELECT path, original_name, note 
+                  FROM image
+                  WHERE owner=?;";
 
-        // ユーザーに関連するレコード(連想配列)のリストを取得
-        $records = $this->backend->getDB()->getAll($q, $this->session->get('user'));
-        if (Ethna::isError($records)) {
-            $this->ae->addObject(null, $records);
+            $img_list = $this->backend->getDB()->getAll($q, $this->session->get('user'));
+        } else {                           
+            // タグが指定されたら
+            // ユーザに関連する画像 + タグで絞り込む
+            $q = "SELECT i.path, i.original_name, i.note
+                  FROM image AS i, attached_tag AS t
+                  WHERE i.path=t.path AND i.owner=? AND t.tag=?;";
+
+            $img_list = $this->backend->getDB()->getAll($q, [$this->session->get('user'),
+                                                        $this->user_tags[$this->af->get('tag')]]);
+        }
+        
+        // エラー処理
+        if (Ethna::isError($img_list)) {
+            trigger_error($img_list->getMessage());
+            $this->ae->addObject(null, $img_list);
         }
 
         // AFにセット
-        $this->af->set('img_info_list', $records);
+        $this->af->set('img_list', $img_list);
 
         return 'list_imgs';
     }

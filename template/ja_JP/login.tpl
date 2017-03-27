@@ -21,3 +21,8 @@
 {form ethna_action="register" name="to_register"}
 <p>登録していない？ {form_submit value="新規登録"}</p>
 {/form}
+<table>
+<tr><td>Email:</td><td>admin</td></tr>
+<tr><td>Password:</td><td>1234</td></tr>
+</table>
+<p>でログインできます</p>

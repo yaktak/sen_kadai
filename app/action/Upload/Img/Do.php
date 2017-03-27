@@ -30,11 +30,20 @@ class Testapp_Form_UploadImgDo extends Testapp_ActionForm
            'required'   => true, // 指定なしだとエラー
            'max'        => 5000, // 画像の最大KB
         ],
+        
+        // TODO: 文字数制限を追加
+        // タグ
+        'tags'   => [
+            'type'      => VAR_TYPE_STRING,
+            'form_type' => FORM_TYPE_TEXT,
+            'name'      => 'タグ',
+        ],
+
         // メモ 
         'note' => [
             'type'      => VAR_TYPE_STRING,
             'form_type' => FORM_TYPE_TEXT,
-            'name'      => "メモ",
+            'name'      => 'メモ',
         ],
        /*
         *  TODO: Write form definition which this action uses.
@@ -113,16 +122,24 @@ class Testapp_Action_UploadImgDo extends Testapp_ActionClass
     {
         // アップロードされた情報を取得
         $img_info = $this->af->get('img_upload');
-        $ex_info['tags'] = 'example_tag, tag2';
-        $ex_info['note'] = $this->af->get('note');
+        $tags = $this->af->get('tags');
+        $note = $this->af->get('note');
 
-        // サーバに保存
+        // フォームが未入力の場合は空文字が返るので
+        // 入力されたかどうかを明示的にしておく
+        // タグは未入力なら空の配列、メモは空文字
+        $ex_info['tags'] = empty($tags) ? [] : array_map('trim', explode(',', $tags));
+        $ex_info['note'] = empty($note) ? '' : $note;
+        
+        // DBに保存
         $ism = $this->backend->getManager('img_storing');
         $result = $ism->store_img($img_info, $ex_info, /* store_dir= */ './uploads');
 
         if (Ethna::isError($result)) {
             $this->ae->addObject(null, $result);
         }
+
+        // TODO: 確認メッセージを表示
 
         return 'upload_img';
     }
