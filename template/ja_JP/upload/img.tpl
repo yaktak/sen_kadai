@@ -1,11 +1,14 @@
 <h2>Upload</h2>
-{if count($errors)} {* エラーメッセージ *}
+{* エラーメッセージ *}
+{if count($errors)} 
     <ul>
     {foreach from=$errors item=error}
         <li>{$error}</li>
     {/foreach}
     </ul>
 {/if}
+{* 完了メッセージ *}
+{if $app.is_done}<p>アップロードが完了しました</p>{/if}
 {* アップロードフォーム *}
 {form ethna_action="upload_img_do" enctype="file"}
     <p>{form_input name="img_upload"}</p>

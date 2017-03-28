@@ -136,11 +136,10 @@ class Testapp_Action_UploadImgDo extends Testapp_ActionClass
         $ism = $this->backend->getManager('img_storing');
         $result = $ism->store_img($img_info, $ex_info, /* store_dir= */ './uploads');
 
-        if (Ethna::isError($result)) {
-            $this->ae->addObject(null, $result);
-        }
+        if (Ethna::isError($result)) $this->ae->addObject(null, $result);
 
-        // TODO: 確認メッセージを表示
+        // アップロード完了メッセージを表示
+        $this->af->setApp('is_done', true);
 
         return 'upload_img';
     }
