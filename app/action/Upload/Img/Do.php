@@ -31,12 +31,12 @@ class Testapp_Form_UploadImgDo extends Testapp_ActionForm
            'max'        => 5000, // 画像の最大KB
         ],
         
-        // TODO: 文字数制限を追加
         // タグ
         'tags'   => [
             'type'      => VAR_TYPE_STRING,
             'form_type' => FORM_TYPE_TEXT,
             'name'      => 'タグ',
+            'max'       => 50,
         ],
 
         // メモ 
@@ -44,6 +44,7 @@ class Testapp_Form_UploadImgDo extends Testapp_ActionForm
             'type'      => VAR_TYPE_STRING,
             'form_type' => FORM_TYPE_TEXT,
             'name'      => 'メモ',
+            'max'       => 400, 
         ],
        /*
         *  TODO: Write form definition which this action uses.
@@ -126,7 +127,7 @@ class Testapp_Action_UploadImgDo extends Testapp_ActionClass
         $note = $this->af->get('note');
 
         // フォームが未入力の場合は空文字が返るので
-        // 入力されたかどうかを明示的にしておく
+        // 入力されたかどうかを明示しておく
         // タグは未入力なら空の配列、メモは空文字
         $ex_info['tags'] = empty($tags) ? [] : array_map('trim', explode(',', $tags));
         $ex_info['note'] = empty($note) ? '' : $note;
