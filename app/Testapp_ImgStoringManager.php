@@ -19,10 +19,9 @@ class Testapp_ImgStoringManager extends Ethna_AppManager
         $ext = self::_check_imagetype($upped_img_info['tmp_name']);
         if ($ext === false) return Ethna::raiseError("対応していないファイル形式です");
         
-        // TODO: 拡張子を追加
         // Unix時間+ランダムな8桁の文字列
         // これをファイル名として画像を保存する
-        $store_path = $move_dir . '/' . self::_rand_str(8). '_' . microtime(true);
+        $store_path = $move_dir . '/' . self::_rand_str(8). '_' . microtime(true) . '.' . $ext;
         
         // 画像を移動
         $result = move_uploaded_file($upped_img_info['tmp_name'], $store_path);
