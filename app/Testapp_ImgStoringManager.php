@@ -75,21 +75,29 @@ class Testapp_ImgStoringManager extends Ethna_AppManager
         $q[] = "INSERT INTO image(path, owner, md5_hash, original_name, extension, note)
                 VALUES(?, ?, ?, ?, ?, ?);";
 
+        // メモが空ならnullを格納
+        $data['note'] = empty($data['note']) ? null : $data['note'];
+
         // プレースホルダの値
         $v[] = [$data['path'],          $data['owner'], $data['md5_hash'],
                 $data['original_name'], $data['ext'],   $data['note']];
 
         // タグをattached_tagテーブルに保存するクエリを追加
-        foreach ($data['tags'] as $t) {
-            $q[] = "INSERT INTO attached_tag(path, tag) VALUES(?, ?);";
-            $v[] = [$data['path'], $t]; // プレースホルダの値も追加
+        // タグが空なら登録しない
+        if (!empty($data['tags'])) {
+            foreach ($data['tags'] as $t) {
+                $q[] = "INSERT INTO attached_tag(path, tag) VALUES(?, ?);";
+                $v[] = [$data['path'], $t];
+            }
         }
 
-        // クエリを順に実行
         $db = $this->backend->getDB();
         $db->begin(); // トランザクション開始
+
+        // クエリを順に実行
         for ($i = 0; $i < count($q); ++$i) {
             $result = $db->query($q[$i], $v[$i]);
+
             if (Ethna::isError($result)) {
                 $db->rollback(); // エラーが起きたらロールバック
                 trigger_error($result->getMessage());

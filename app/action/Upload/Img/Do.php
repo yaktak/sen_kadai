@@ -19,6 +19,7 @@ class Testapp_Form_UploadImgDo extends Testapp_ActionForm
      *  @access protected
      *  @var    array   form definition.
      */
+    // フォームが未入力の場合は空文字が返る
     public $form = array(
         // アップロードフォームの定義
         'img_upload' => [
@@ -126,16 +127,14 @@ class Testapp_Action_UploadImgDo extends Testapp_ActionClass
         $tags = $this->af->get('tags');
         $note = $this->af->get('note');
 
-        // フォームが未入力の場合は空文字が返るので
-        // 入力されたかどうかを明示しておく
-        // タグは未入力なら空の配列、メモは空文字
-        $ex_info['tags'] = empty($tags) ? [] : array_map('trim', explode(',', $tags));
-        $ex_info['note'] = empty($note) ? '' : $note;
+        // 未入力なら空文字を代入
+        // これらの行は不要だが明示的に書いておく
+        $ex_info['tags'] = empty($tags) ? '' : array_map('trim', explode(',', $tags));
+        $ex_info['note'] = empty($note) ? '' : $note; 
         
         // DBに保存
         $ism = $this->backend->getManager('img_storing');
         $result = $ism->store_img($img_info, $ex_info, /* store_dir= */ './uploads');
-
         if (Ethna::isError($result)) $this->ae->addObject(null, $result);
 
         // アップロード完了メッセージを表示

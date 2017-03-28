@@ -105,7 +105,7 @@ class Testapp_Action_ViewImg extends Testapp_ActionClass
         // 選択された画像のパスを取得
         $img_path = $this->af->get('img_path');
 
-        // 画像の情報を取得するクエリ
+        // 画像の情報を取得
         $q = "SELECT path, md5_hash, note, original_name, extension
               FROM image 
               WHERE path = ?;";
@@ -114,13 +114,12 @@ class Testapp_Action_ViewImg extends Testapp_ActionClass
 
         // タグの情報を取得
         $q = "SELECT tag FROM attached_tag WHERE path = ?;";
-        // 最低1個の要素を持つ配列が返る
         $tags = $this->backend->getDB()->getCol($q, $img_path);
         if (Ethna::isError($tags)) $this->ae->addObject(null, $tags);
 
-        // データがない場合は空文字が登録されているので、代わりにnullをセット
+        // データがない場合はnullをセット
         $img_info = empty($img_info) ? null : $img_info;
-        $tags     = empty($tags[0])  ? null : $tags;
+        $tags     = empty($tag)      ? null : $tags;
         
         // 値をセット
         $this->af->set('view_img_info', $img_info);
