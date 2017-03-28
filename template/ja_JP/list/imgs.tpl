@@ -1,5 +1,5 @@
 <h2>Uploaded images</h2>
-{form ethna_action="list_imgs"}
+{form ethna_action="list_imgs" method="GET"}
     <p>{form_input name="tag"}{form_submit value="検索"}</p>
 {/form}
 <table>
@@ -7,11 +7,8 @@
     {foreach from=$app.img_list item=i}
         <tr>
             <td>
-                {* 画像表示ボタン *}
-                {form ethna_action="view_img"}
-                    {form_input name="img_path" value=$i.path}
-                    {form_submit value="view"}
-                {/form}
+                {* 画像表示リンク *}
+                <a href="?action_view_img=true&img_path={$i.path}">View</a>
             </td>
             <td>{$i.original_name}</td>
             <td>{$i.note}</td>

@@ -15,8 +15,10 @@
 </div>
 
 <div id="footer">
-    <a href="./?action_register=true">新規登録</a>
-    {if isset($session.user)}
+    {if !isset($session.user)}
+        <a href="?action_register=true">新規登録</a>
+        <a href="?action_login=true">ログイン</a>
+    {else}
         <a href="./?action_mypage=true">マイページ</a>
         <a href="./?action_logout=true">ログアウト</a>
     {/if}

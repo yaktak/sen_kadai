@@ -18,9 +18,7 @@
     </tr>
 </table>
 {/form}
-{form ethna_action="register" name="to_register"}
-<p>登録していない？ {form_submit value="新規登録"}</p>
-{/form}
+<p>登録していない？<a href="?action_register=true">新規登録</a></p>
 <table>
 <tr><td>Email:</td><td>admin</td></tr>
 <tr><td>Password:</td><td>1234</td></tr>
