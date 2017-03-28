@@ -129,12 +129,12 @@ class Testapp_Action_UploadImgDo extends Testapp_ActionClass
 
         // 未入力なら空文字を代入
         // これらの行は不要だが明示的に書いておく
-        $ex_info['tags'] = empty($tags) ? '' : array_map('trim', explode(',', $tags));
-        $ex_info['note'] = empty($note) ? '' : $note; 
+        $tags = empty($tags) ? '' : array_map('trim', explode(',', $tags));
+        $note = empty($note) ? '' : $note; 
         
         // DBに保存
         $ism = $this->backend->getManager('img_storing');
-        $result = $ism->store_img($img_info, $ex_info, /* store_dir= */ './uploads');
+        $result = $ism->store_img($img_info, $note, $tags, /* store_dir= */ './uploads');
         if (Ethna::isError($result)) $this->ae->addObject(null, $result);
 
         // アップロード完了メッセージを表示

@@ -8,12 +8,12 @@ class Testapp_ImgStoringManager extends Ethna_AppManager
      * 画像を移動して詳細をDBに保存
      *
      * @param  assoc_array            ActionFormから渡される連想配列
-     * @param  assoc_array            追加情報 ['note'=>string メモ、'tags'=>array タグ]
+     * @param  string                 画像に関するメモ
+     * @param  array                  画像に関するタグ
      * @param  string                 移動先ディレクトリ
      * @return null | Ethna_Error     成功したらnull
      */
-     // TODO: 引数を簡略化
-    public function store_img($upped_img_info, $ex_info, $move_dir){
+    public function store_img($upped_img_info, $note, $tags, $move_dir){
 
         // 画像かどうかチェック
         $ext = self::_check_imagetype($upped_img_info['tmp_name']);
@@ -39,13 +39,13 @@ class Testapp_ImgStoringManager extends Ethna_AppManager
 
         // DBに保存する情報
         $store_data = [
-            'path'          => $store_path,  // 保管パス
-            'md5_hash'      => $md5_hash,    // MD5ハッシュ
+            'path'          => $store_path,                 // 保管パス
+            'md5_hash'      => $md5_hash,                   // MD5ハッシュ
             'owner'         => $this->session->get('user'), // アップロードしたユーザー名
-            'tags'          => $ex_info['tags'],            // タグ
-            'note'          => $ex_info['note'],            // メモ
+            'tags'          => $tags,                       // タグ
+            'note'          => $note,                       // メモ
             'original_name' => $upped_img_info['name'],     // 元のファイル名
-            'ext'           => $ext // 拡張子
+            'ext'           => $ext                         // 拡張子
         ];
 
         // DBに情報を保存
