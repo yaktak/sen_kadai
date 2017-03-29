@@ -130,7 +130,7 @@ class Testapp_Action_UploadImgDo extends Testapp_ActionClass
 
         // 未入力なら空文字を代入
         // これらの行は不要だが明示的に書いておく
-        $tags = empty($tags) ? '' : array_map('trim', explode(',', $tags));
+        $tags = empty($tags) ? '' : array_unique(array_map('trim', explode(',', $tags)));
         $note = empty($note) ? '' : $note; 
         
         // DBに保存
