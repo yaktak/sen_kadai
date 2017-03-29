@@ -119,7 +119,7 @@ class Testapp_Action_ViewImg extends Testapp_ActionClass
 
         // データがない場合はnullをセット
         $img_info = empty($img_info) ? null : $img_info;
-        $tags     = empty($tag)      ? null : $tags;
+        $tags     = empty($tags)      ? null : $tags;
         
         // 値をセット
         $this->af->set('view_img_info', $img_info);
