@@ -77,8 +77,6 @@ class Testapp_Form_ListImgs extends Testapp_ActionForm
  */
 class Testapp_Action_ListImgs extends Testapp_ActionClass
 {
-    private $user_tags; // ユーザが登録したすべてのタグの配列
-
     /**
      *  preprocess of list_imgs Action.
      *
@@ -89,13 +87,16 @@ class Testapp_Action_ListImgs extends Testapp_ActionClass
     public function prepare()
     {
         // タグの配列を取得
-        $this->user_tags = $this->_fetch_tags();
+        $tag_names = $this->_fetch_tags();
 
         // 先頭にデフォルトのタグを追加
-        array_unshift($this->user_tags, "すべて表示");
+        array_unshift($tag_names, "すべて表示");
+        
+        // 表示名と値を同じにする
+        foreach ($tag_names as $n) $tags[$n] = $n;
 
         // セレクトボックスの選択肢を初期化
-        $this->af->form['tag']['option'] = $this->user_tags;
+        $this->af->form['tag']['option'] = $tags;
        
         return null;
     }
@@ -137,7 +138,7 @@ class Testapp_Action_ListImgs extends Testapp_ActionClass
                   WHERE i.path=t.path AND i.owner=? AND t.tag=?;";
 
             $img_list = $this->backend->getDB()->getAll($q, [$this->session->get('user'),
-                                                        $this->user_tags[$this->af->get('tag')]]);
+                                                             $this->af->get('tag')]);
         }
         
         // エラー処理
