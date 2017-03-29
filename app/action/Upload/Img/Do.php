@@ -38,6 +38,7 @@ class Testapp_Form_UploadImgDo extends Testapp_ActionForm
             'form_type' => FORM_TYPE_TEXT,
             'name'      => 'タグ',
             'max'       => 50,
+            'regexp'    => '(^[^,\s]+$|^([^,\s]+,\s*)+[^,\s]+$)',
         ],
 
         // メモ 
